@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+import uuid
 
 
 class Genre(models.Model):
@@ -39,3 +40,30 @@ class Book(models.Model):
         """
         return reverse('book-detail', args=[str(self.id)])
 
+
+class BookInstance(models.Model):
+    """
+    Model representing a specific copy of a book (i.e. that can be borrowed from the library)
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4,
+                          help_text="Unique ID for this paticular book across whole library")
+    book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
+    imprint = models.CharField(max_length=200)
+    due_back = models.DateField(null=True, blank=True)
+
+    LOAN_STATUS = (
+        ('d', 'Maintenance'),
+        ('o', 'On loan'),
+        ('a', 'Available'),
+        ('r', 'Reversed'),
+    )
+
+    status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='d', help_text='Book availability')
+
+    class Meta:
+        ordering = ["due_back"]
+
+
+    def __str__(self):
+        """String for representing the Model object"""
+        return '%s (%s)' % (self.id, self.book.title)
