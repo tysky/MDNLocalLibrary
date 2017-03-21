@@ -27,6 +27,7 @@ class Book(models.Model):
     isbn = models.CharField('ISBN', max_length=13, help_text='13 Character <a href='
                                                              '"https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
+    language = models.CharField(max_length=50, help_text="Input a book languauge")
 
     def __str__(self):
         """
@@ -85,4 +86,16 @@ class Author(models.Model):
 
     def __str__(self):
         """String for representing the Model object"""
+        return '%s, %s' % (self.last_name, self.first_name)
+
+
+class Benefactor(models.Model):
+    """
+    Model representing a local benefactor
+    """
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
         return '%s, %s' % (self.last_name, self.first_name)
