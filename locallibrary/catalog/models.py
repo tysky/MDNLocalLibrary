@@ -27,6 +27,7 @@ class Book(models.Model):
     isbn = models.CharField('ISBN', max_length=13, help_text='13 Character <a href='
                                                              '"https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
+    language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """
@@ -40,6 +41,13 @@ class Book(models.Model):
         """
         return reverse('book-detail', args=[str(self.id)])
 
+    def display_genre(self):
+        """
+        Creates a sstring for Genre. This is required to display genre in Admin
+        """
+        return ', '.join([genre.name for genre in self.genre.all()[:3] ])
+    display_genre.short_description = 'Genre'
+
 
 class BookInstance(models.Model):
     """
@@ -50,13 +58,12 @@ class BookInstance(models.Model):
     book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
-    language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     LOAN_STATUS = (
         ('d', 'Maintenance'),
         ('o', 'On loan'),
         ('a', 'Available'),
-        ('r', 'Reversed'),
+        ('r', 'Reserved'),
     )
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='d', help_text='Book availability')
@@ -93,10 +100,10 @@ class Language(models.Model):
     """
     Model representing a language
     """
-    language = models.CharField(max_length=100, help_text="Input a languauge (e.g. English, Russian, French etc.")
+    name = models.CharField(max_length=100, help_text="Input a languauge (e.g. English, Russian, French etc.")
 
     def __str__(self):
-        return self.language
+        return self.name
 
 
 class Benefactor(models.Model):
