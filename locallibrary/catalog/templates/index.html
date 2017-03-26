@@ -13,7 +13,7 @@
         <img src="{% static "images/basic-django.png" %}" alt="My image">
     </div>
     <h2>Dynamic content</h2>
-    <p>THe library has the following record counts:</p>
+    <p>The library has the following record counts:</p>
     <ul>
         <li><strong>Books:</strong>{{ num_books }}</li>
         <li><strong>Copies:</strong>{{ num_instances }}</li>
@@ -22,4 +22,6 @@
         <li><strong>Genres:</strong>{{ num_genres }}</li>
         <li><strong>Книг, в названии которых есть слово "Дети":</strong>{{ num_books_children }}</li>
     </ul>
+    <p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time
+                                                {% else %} times{% endif %}</p>
 {% endblock %}

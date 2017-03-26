@@ -16,6 +16,8 @@ def index(request):
     num_authors = Author.objects.count() # The 'all()' is implied by default
     num_genres = Genre.objects.count()
     num_books_children = Book.objects.filter(title__icontains='Дети').count()
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits+1
 
     #Render the HTML template index.html with the data in the context variable
     return render(
@@ -23,7 +25,8 @@ def index(request):
         'index.html',
         context={'num_books':num_books, 'num_instances':num_instances,
                  'num_instances_available':num_instances_available, 'num_authors':num_authors,
-                 'num_genres': num_genres, 'num_books_children': num_books_children}
+                 'num_genres': num_genres, 'num_books_children': num_books_children,
+                'num_visits':num_visits},
     )
 
 
@@ -52,3 +55,5 @@ class AuthorDetailView(generic.DetailView):
         context = super(AuthorDetailView, self).get_context_data(**kwargs)
         context['test'] = 'available'
         return context
+
+
