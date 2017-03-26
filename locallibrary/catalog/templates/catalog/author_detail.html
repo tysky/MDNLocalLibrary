@@ -10,6 +10,8 @@
             <a href="{% url 'book-detail' book.pk %}">{{ book.title }}</a>
             <b> ({{ book.bookinstance_set.count }})</b>
             <p>{{ book.summary }}</p>
+            <br>
+            <p>TEST = {{ author.pk }}</p>
         {% endfor %}
     </div>
 

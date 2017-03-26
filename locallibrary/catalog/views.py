@@ -41,8 +41,14 @@ class BookDetailView(generic.DetailView):
 
 class AuthorListView(generic.ListView):
     model = Author
+    # queryset = Author.objects.filter(first_name__icontains='Жюль')
     paginate_by = 2
 
 
 class AuthorDetailView(generic.DetailView):
     model = Author
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+        context['test'] = 'available'
+        return context
