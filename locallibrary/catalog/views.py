@@ -15,7 +15,7 @@ def index(request):
     num_instances_available = BookInstance.objects.filter(status__exact='a').count()
     num_authors = Author.objects.count() # The 'all()' is implied by default
     num_genres = Genre.objects.count()
-    num_books_children = Book.objects.filter(title__icontains='дети').count()
+    num_books_children = Book.objects.filter(title__icontains='Дети').count()
 
     #Render the HTML template index.html with the data in the context variable
     return render(
@@ -37,3 +37,12 @@ class BookListView(generic.ListView):
 
 class BookDetailView(generic.DetailView):
     model = Book
+
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 2
+
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
