@@ -60,6 +60,13 @@ class BookInstance(models.Model):
     book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    @property
+    def is_overdue(self):
+        if date.today() > self.due_back:
+            return True
+        return False
 
     LOAN_STATUS = (
         ('d', 'Maintenance'),
@@ -69,13 +76,6 @@ class BookInstance(models.Model):
     )
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='d', help_text='Book availability')
-    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    @property
-    def is_overdue(self):
-        if date.today() > self.due_back:
-            return True
-        return False
 
     class Meta:
         ordering = ["due_back"]
@@ -94,7 +94,6 @@ class Author(models.Model):
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
     date_of_death = models.DateField('Died', null=True, blank=True)
-
 
     def get_absolute_url(self):
         """
