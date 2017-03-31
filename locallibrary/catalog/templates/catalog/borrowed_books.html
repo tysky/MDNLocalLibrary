@@ -5,7 +5,8 @@
         <ul>
             {% for bookinst in bookinstance_list %}
                 <li><a href="{{ bookinst.book.get_absolute_url }}">{{ bookinst.book.title }}</a>
-                    <span class="{% if bookinst.is_overdue %}text-danger{% endif %}">({{ bookinst.due_back }}) - {{ bookinst.borrower }}</span></li>
+                    <span class="{% if bookinst.is_overdue %}text-danger{% endif %}">({{ bookinst.due_back }}) - {{ bookinst.borrower }} </span></li>
+                    {% if perms.catalog.can_mark_returned %}- <a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a>{% endif %}
             {% endfor %}
         </ul>
     {% endif %}
